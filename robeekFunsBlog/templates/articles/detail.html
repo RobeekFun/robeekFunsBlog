@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}{{article.article_title}}{% endblock %}
+
+{% block content %}
+	<div class="post-info">
+		<h1>{{article.article_title}}</h1>
+		<p>{{article.article_text}}</p>
+		<em>{{article.pub_date}}</em>
+		{% if article.article_image.url != "" %}
+			<img src="{{article.article_image.url}}" alt="{{article.article_title}}">
+		{% else %}
+		{% endif %}
+	</div>
+	<br>
+	<div class="comments">
+		<h3>Комментарии 🗨{{ article.comment_set.count }}</h3>
+		{% if latest_comments_list %}
+			{% for c in latest_comments_list %}
+				<div class="comment">
+					<strong>{{c.author_name}}</strong>
+					<p>{{c.comment_text}}</p>
+					<em>{{c.pub_date}}</em>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="no--comments">
+				<h4>У этой статьи нет комментариев. Будь первый!</h4>
+			</div>
+		{% endif %}
+		<form action="{% url 'articles:leave_comment' article.id %}" method="POST">
+
+			{% csrf_token %}
+
+			<input type="text" required placeholder = "Ваше имя" name="name"><br>
+			<textarea name="text" required placeholder="Текст комментария"></textarea><br>
+			<button type="submit">Оставить комментарий</button>
+		</form>
+	</div>
+	<div class="another">
+		<h3>Другие статьи</h3>
+		<hr>
+		{% if another_articles %}
+			{% for aa in another_articles %}
+			{% if aa.article_text != article.article_text %}
+				<div class="post">
+					{% if aa.article_image.url != "" %}
+					<div class="image">
+						<img src="{{aa.article_image.url}}">
+					</div>
+					{% else %}
+					{% endif %}
+					<div class="info">
+						<a href="{% url 'articles:detail' aa.id %}">{{aa.article_title}}</a>
+						<p>{{aa.article_text|truncatechars_html:100 }}</p>
+						<em>{{aa.pub_date}}</em>
+					</div>
+				</div>
+				<hr>
+			{% else %}
+
+			{% endif %}
+			{% endfor %}
+		{% else %}
+			<p></p>
+		{% endif %}
+	</div>
+{% endblock %}

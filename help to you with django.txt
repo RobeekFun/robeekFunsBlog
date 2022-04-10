@@ -1,0 +1,25 @@
+В этом файле я буду записывать все интересное и найденное, что поможет в разработке сайт на Python Django 2.2.4
+_______________________________________________________________________________________________________________________________
+
+Офф документация 2.2 версии джанго - https://docs.djangoproject.com/en/2.2/
+Доп урок по джанго - https://tutorial.djangogirls.org/ru/
+________________________________________________________________________________________________________________________________
+Чтобы обрезать какой-то текст в шаблонезаторе нужно прописать после текста который нужно обрезать "|truncatechars_html:(количество символов)":
+	Пример: <p>{{a.article_text|truncatechars_html:100 }}</p> (То есть текст статьи обрезаем до 100 символов)
+
+Чтобы добавлять картинки на свой сайт, их нужно куда-то загружать, вот как это делать(в моделе пишем поле ImageField(upload_to = "images/"))
+В settings.py перед PROJECT_ROOT пишем такой код:
+	MEDIA_URL = '/media/'
+	MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+В urls.py проекта пишем такой код:
+	from django.conf import settings
+	from django.conf.urls.static import static
+
+	--- тут urlpatterns
+
+	if settings.DEBUG:
+		urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+Далее в шаблонизаторе пишем в img src, ну или где нужно в другом месте:
+	{{переменная из модели.url}}
+	Пример:
+		{{article.article_image.url}}

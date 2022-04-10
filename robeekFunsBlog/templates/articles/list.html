@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Последние статьи{% endblock %}
+
+{% block content %}
+
+	{% if latest_articles_list %}
+
+		{% for a in latest_articles_list %}
+			<div class="post">
+				{% if a.article_image.url != "" %}
+				<div class="image">
+					<img src="{{a.article_image.url}}">
+				</div>
+				{% else %}
+				{% endif %}
+				<div class="info">
+					<a href="{% url 'articles:detail' a.id %}">{{a.article_title}}</a>
+					<p>{{a.article_text|truncatechars_html:100 }}</p>
+					<em>{{a.pub_date}}</em>
+				</div>
+			</div>
+			<hr>
+
+		{% endfor %}
+
+	{% else %}
+		Статьи не найдены
+	{% endif %}
+
+{% endblock %}
